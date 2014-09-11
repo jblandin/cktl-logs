@@ -1,0 +1,33 @@
+{
+  "name": "cktl-logs",
+  "version": "0.0.1",
+  "description": "Gestion des logs client/serveur avec AngularJS",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jblandin/cktl-logs.git"
+  },
+  "keywords": [
+    "angular",
+    "angularjs",
+    "log"
+  ],
+  "author": "Julien Blandineau",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jblandin/cktl-logs/issues"
+  },
+  "devDependencies": {
+    "http-server": "~0.7.0"
+  },
+    "scripts": {
+        "postinstall": "bower install",
+
+        "prestart": "npm install",
+        "start": "http-server -a localhost -p 8000 -c-1"
+
+    }
+}
