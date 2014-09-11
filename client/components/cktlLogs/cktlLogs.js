@@ -6,17 +6,17 @@
 angular.module('myApp')
     .provider("$exceptionHandler", {
         $get: function (errorLogService) {
-            console.log("$exceptionHandler.$get()");
+            //console.log("$exceptionHandler.$get()");
             return(errorLogService);
         }
     })
 
     .factory("errorLogService", function ($log, $window, $filter) {
 
-        $log.info("errorLogService()");
+        //$log.info("errorLogService()");
 
         function log(exception, cause) {
-            $log.debug("errorLogService.log()");
+            //$log.debug("errorLogService.log()");
 
             // Default behavior, log to browser console
             $log.error.apply($log, arguments);
@@ -25,7 +25,7 @@ angular.module('myApp')
         }
 
         function logErrorToServerSide(exception, cause) {
-            $log.info("logErrorToServerSide()");
+            //$log.info("logErrorToServerSide()");
 
             // Read from configuration
             var serviceUrl = "http://localhost:3000/error";
@@ -39,9 +39,10 @@ angular.module('myApp')
                 var stackTrace = exception ? (exception.stack ? exception.stack.toString() : "no stack") : "no exception";
                 var browserInfo = {
                     navigatorAppName: navigator.appName,
-                    navigatorUserAgent: navigator.userAgent
-                };
+                    navigatorUserAgent: navigator.userAgent,
 
+                };
+                console.log(navigator);
                 // This is the custom error content you send to server side
                 var data = angular.toJson({
                     date: $filter('date')(Date.now(), 'dd/MM/yyyy HH:mm:ss.sss'),
@@ -52,7 +53,7 @@ angular.module('myApp')
                     browserInfo: browserInfo
                 });
 
-                $log.debug("logging error to server side...", data);
+                //$log.debug("logging error to server side...", data);
 
                 // Log the JavaScript error to the server.
                 $.ajax({
@@ -87,13 +88,28 @@ angular.module('myApp')
             // TODO généraliser le decorator à tous les niveaux de log
             $delegate.debug = function () {
                 var args = [].slice.call(arguments),
-                    now = $filter('date')(Date.now(), '[dd/MM/yyyy HH:mm:ss.sss]');
+                    now = $filter('date')(Date.now(), '[dd/MM/yyyy][HH:mm:ss.sss]');
 
                 // Prepend timestamp
-                args[0] = supplant("{0} - {1}", [ now, args[0] ]);
+                args[0] = now + ' ' + args[0];
 
                 // Call the original with the output prepended with formatted timestamp
                 debugFn.apply(null, args)
+            };
+
+            var transformLogFn = function (logFn) {
+
+                return function () {
+                    var args = [].slice.call(arguments),
+                        now = $filter('date')(Date.now(), '[dd/MM/yyyy][HH:mm:ss.sss]');
+
+                    // Prepend timestamp
+                    args[0] = now + ' ' + args[0];
+
+                    // Call the original with the output prepended with formatted timestamp
+                    logFn.apply(null, args)
+                }
+
             };
 
             return $delegate;
