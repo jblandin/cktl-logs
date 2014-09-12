@@ -16,4 +16,8 @@ angular.module('myApp', [
                 controller:     'View1Ctrl'
             })
             .otherwise({redirectTo: '/view1'});
-    }]);
+    }])
+    .service('MyAppService', function($rootElement){
+        return {name: $rootElement.attr('ng-app')};
+    })
+;
